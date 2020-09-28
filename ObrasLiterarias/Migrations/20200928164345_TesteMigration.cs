@@ -2,7 +2,7 @@
 
 namespace ObrasLiterarias.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class TesteMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,8 @@ namespace ObrasLiterarias.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: true)
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    Sobrenome = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

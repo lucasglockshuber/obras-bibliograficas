@@ -15,8 +15,8 @@ namespace ObrasLiterarias.Context
             public DbSet<Autor> Autores { get; set; }
             protected override void OnModelCreating(ModelBuilder builder)
             {
-                builder.Entity<Autor>().HasKey(m => m.Id);
-                base.OnModelCreating(builder);
+            builder.Entity<Autor>().HasKey(m => m.Id);
+            base.OnModelCreating(builder);
             }
     }
 }

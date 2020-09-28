@@ -20,7 +20,7 @@ namespace ObrasLiterarias.Controllers
         }
 
         // GET: Autors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int quantidade = 0)
         {
             return View(await _context.Autores.ToListAsync());
         }
@@ -148,6 +148,79 @@ namespace ObrasLiterarias.Controllers
         private bool AutorExists(int id)
         {
             return _context.Autores.Any(e => e.Id == id);
+        }
+
+        public async Task<List<string>> GetAutoresFormatados(int quantidade)
+        {
+               var recebeLista = _context.Autores.Take(quantidade).Select(nome => nome.Nome).ToListAsync();
+               return FormatarNomes((IEnumerable<Autor>)recebeLista);
+            
+        }
+
+        private List<string> FormatarNomes(IEnumerable<Autor> autores)
+        {
+            List<string> nomes = new List<string>();
+            foreach (var autor in autores)
+            {
+                //sobrenome é o ultimo nome e deve ser sempre todo maiusculo
+                //Se nao tiver sobrenome é o nome q fica todo maiusculo FEITO
+                //se o ultimo nome for NETO,NETA,FILHO etc e tiver um sobrenome antes coloca ele junto
+                //o resto do nome deve ser com a primeira letra maiuscula, exceto da,de,do,das etc
+                if (string.IsNullOrEmpty(autor.Sobrenome))
+                {
+                    nomes.Add(autor.Nome.ToUpper());
+                }
+                else
+                {
+                    nomes.Add(CriarStringFinal(autor.Sobrenome, autor.Nome));
+                }
+            }
+            return nomes;
+        }
+
+        private string CriarStringFinal(string sobrenome, string nome)
+        {
+            var arrayNomes = sobrenome.Split(' ');
+            string nomeFormatado = "";
+            int nomesFormatados = 1;
+            switch (arrayNomes[arrayNomes.Length - 1].ToLower())
+            {
+                case "filho":
+                case "filha":
+                case "neto":
+                case "neta":
+                case "sobrinho":
+                case "sobrinha":
+                case "junior":
+                    if (arrayNomes.Length > 1)
+                    {
+                        nomeFormatado = arrayNomes[arrayNomes.Length - 2].ToUpper();
+                        nomesFormatados = 2;
+                    }
+                    nomeFormatado += $" {arrayNomes[arrayNomes.Length - 1].ToUpper()},";
+                    break;
+                default:
+                    nomeFormatado = arrayNomes[arrayNomes.Length - 1].ToUpper() + ",";
+                    break;
+            }
+            nomeFormatado += $" {nome}";
+            for (int i = 0; i <= arrayNomes.Length - 1 - nomesFormatados; i++)
+            {
+                switch (arrayNomes[i].ToLower())
+                {
+                    case "da":
+                    case "de":
+                    case "do":
+                    case "das":
+                    case "dos":
+                        nomeFormatado += $" {arrayNomes[i]}";
+                        break;
+                    default:
+                        nomeFormatado += $" {char.ToUpper(arrayNomes[i][0]) + arrayNomes[i].Substring(1)}";
+                        break;
+                }
+            }
+            return nomeFormatado;
         }
     }
 }

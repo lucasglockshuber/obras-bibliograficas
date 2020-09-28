@@ -8,8 +8,8 @@ using ObrasLiterarias.Context;
 namespace ObrasLiterarias.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200925003820_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200928164345_TesteMigration")]
+    partial class TesteMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,9 @@ namespace ObrasLiterarias.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Nome")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Sobrenome")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
