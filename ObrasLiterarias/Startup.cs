@@ -27,12 +27,11 @@ namespace ObrasLiterarias
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
             var connection = Configuration["ConexaoSqlite:SqliteConnectionString"];
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(connection)
             );
+
             // Add framework services.
             services.AddMvc();
 
@@ -46,23 +45,14 @@ namespace ObrasLiterarias
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute("default", "{controller=Autors}/{action=Index}");
             });
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Autors}/{action=Index}/{id?}");
-            //});
         }
     }
 }
